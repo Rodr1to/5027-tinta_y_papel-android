@@ -2,11 +2,13 @@ package com.rodrigovalverde.tinta_y_papel_android.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.rodrigovalverde.tinta_y_papel_android.navigations.MainScaffold
+import com.rodrigovalverde.tinta_y_papel_android.navigation.MainScaffold
 import com.rodrigovalverde.tinta_y_papel_android.screens.*
 import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LoginViewModel
 

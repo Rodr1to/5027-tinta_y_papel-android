@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
-import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibrosViewModel
+import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LibrosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

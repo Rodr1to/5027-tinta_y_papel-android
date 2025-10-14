@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rodrigovalverde.tinta_y_papel_android.data.Categoria
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
-import com.rodrigovalverde.tinta_y_papel_android.viewmodel.CategoriasViewModel
+import com.rodrigovalverde.tinta_y_papel_android.viewmodels.CategoriasViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

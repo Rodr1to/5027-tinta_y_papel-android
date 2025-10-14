@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.viewmodel
+package com.rodrigovalverde.tinta_y_papel_android.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

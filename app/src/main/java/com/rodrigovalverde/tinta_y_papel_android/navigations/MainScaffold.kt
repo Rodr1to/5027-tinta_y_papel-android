@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.navigations
+package com.rodrigovalverde.tinta_y_papel_android.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,22 +10,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.rodrigovalverde.tinta_y_papel_android.R
-import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
 
 sealed class BottomNavItem(val route: String, val icon: Int, val label: String) {
     object Home : BottomNavItem(AppScreens.HomeScreen.route, R.drawable.home, "Inicio")
     object Category : BottomNavItem(AppScreens.CategoriasScreen.route, R.drawable.category, "Categorías")
     object Catalog : BottomNavItem(AppScreens.CatalogScreen.route, R.drawable.catalog, "Catálogo")
-    object Profile : BottomNavItem(AppScreens.ProfileScreen.route, R.drawable.profile, "Perfil")
+    object Profile : BottomNavItem(AuthNav.route, R.drawable.profile, "Perfil")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffold(navController: NavController, content: @Composable (Modifier) -> Unit) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
     val items = listOf(
         BottomNavItem.Home,
@@ -36,7 +37,7 @@ fun MainScaffold(navController: NavController, content: @Composable (Modifier) -
 
     Scaffold(
         bottomBar = {
-            if (currentRoute in items.map { it.route }) {
+            if (currentDestination?.hierarchy?.any { dest -> items.any { it.route == dest.route } } == true) {
                 NavigationBar {
                     items.forEach { screen ->
                         NavigationBarItem(
@@ -44,14 +45,16 @@ fun MainScaffold(navController: NavController, content: @Composable (Modifier) -
                                 Icon(
                                     painter = painterResource(id = screen.icon),
                                     contentDescription = screen.label,
-                                    modifier = Modifier.size(24.dp)
+                                    // CAMBIO: Se reduce aún más el tamaño del ícono
+                                    modifier = Modifier.size(20.dp)
                                 )
                             },
-                            label = { Text(screen.label, fontSize = 10.sp) },
-                            selected = currentRoute == screen.route,
+                            // CAMBIO: Se reduce aún más el tamaño del texto
+                            label = { Text(screen.label, fontSize = 9.sp) },
+                            selected = currentDestination.hierarchy.any { it.route == screen.route },
                             onClick = {
                                 navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
                                     launchSingleTop = true
