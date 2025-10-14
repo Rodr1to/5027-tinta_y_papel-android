@@ -11,6 +11,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -87,7 +88,8 @@ fun TermsAndConditionsText(onTextClick: () -> Unit) {
     val annotatedString = buildAnnotatedString {
         append("Acepto los ")
         pushStringAnnotation(tag = "TERMS", annotation = "terms")
-        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+        // --- 👇 CAMBIO CRÍTICO AQUÍ 👇 ---
+        withStyle(style = SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline)) {
             append("Términos de Uso y Política de Privacidad")
         }
         pop()
@@ -104,6 +106,7 @@ fun TermsAndConditionsText(onTextClick: () -> Unit) {
         }
     )
 }
+
 
 @Composable
 fun TermsDialog(onDismiss: () -> Unit) {

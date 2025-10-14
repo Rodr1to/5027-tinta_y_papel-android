@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -104,12 +105,15 @@ fun LibroRowCard(libro: Libro, navController: NavController) {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                // CAMBIO: Se convierte el String a Double antes de formatear
                 val precioDouble = libro.precio.toDoubleOrNull() ?: 0.0
                 Text(
                     text = "S/ ${"%.2f".format(precioDouble)}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    // --- 👇 CAMBIO AQUÍ 👇 ---
+                    // Se reduce el tamaño del texto del precio.
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

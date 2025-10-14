@@ -17,6 +17,7 @@ sealed class BottomNavItem(val route: String, val icon: Int, val label: String) 
     object Home : BottomNavItem(AppScreens.HomeScreen.route, R.drawable.home, "Inicio")
     object Category : BottomNavItem(AppScreens.CategoriasScreen.route, R.drawable.category, "Categorías")
     object Catalog : BottomNavItem(AppScreens.CatalogScreen.route, R.drawable.catalog, "Catálogo")
+    object Saved : BottomNavItem(AppScreens.SavedScreen.route, R.drawable.bookmarks, "Favoritos")
     object Profile : BottomNavItem(AppScreens.ProfileScreen.route, R.drawable.profile, "Perfil")
 }
 
@@ -24,7 +25,7 @@ sealed class BottomNavItem(val route: String, val icon: Int, val label: String) 
 @Composable
 fun MainScaffold(
     navController: NavController,
-    // CAMBIO CRÍTICO: La función 'content' ahora espera recibir PaddingValues
+    // CAMBIO CRÍTICO: La función 'content' ahora debe aceptar PaddingValues
     content: @Composable (PaddingValues) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -34,6 +35,7 @@ fun MainScaffold(
         BottomNavItem.Home,
         BottomNavItem.Category,
         BottomNavItem.Catalog,
+        BottomNavItem.Saved,
         BottomNavItem.Profile
     )
 
@@ -47,7 +49,7 @@ fun MainScaffold(
                                 Icon(
                                     painter = painterResource(id = screen.icon),
                                     contentDescription = screen.label,
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(30.dp)
                                 )
                             },
                             label = { Text(screen.label, fontSize = 10.sp) },

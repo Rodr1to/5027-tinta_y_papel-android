@@ -1,6 +1,8 @@
 package com.rodrigovalverde.tinta_y_papel_android.navigation
 
-// Objeto para las rutas del grafo de autenticación
+import com.rodrigovalverde.tinta_y_papel_android.R
+
+// Objeto para las rutas del grafo de autenticación (LA PARTE QUE FALTABA)
 object AuthNav {
     const val route = "auth_graph"
     const val profile = "profile_screen"
@@ -14,10 +16,14 @@ sealed class AppScreens(val route: String) {
     object HomeScreen : AppScreens("home_screen")
     object CategoriasScreen : AppScreens("categorias_screen")
     object CatalogScreen : AppScreens("catalog_screen")
+    object WebServiceScreen : AppScreens("webservice_screen")
 
     // Rutas que ahora pertenecen al grafo de autenticación
     object ProfileScreen : AppScreens(AuthNav.profile)
     object LoginScreen : AppScreens(AuthNav.login)
+
+    // Ruta para la pantalla de "Guardados"
+    object SavedScreen: AppScreens("saved_screen")
 
     object LibrosPorCategoriaScreen : AppScreens("libros_por_categoria_screen/{idCategoria}") {
         fun createRoute(idCategoria: Int) = "libros_por_categoria_screen/$idCategoria"

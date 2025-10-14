@@ -8,6 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ApiService {
+    // ... (las otras funciones se quedan igual)
     @GET("libros.php")
     suspend fun getLibros(): List<Libro>
 
@@ -17,11 +18,13 @@ interface ApiService {
     @GET("libros_categoria.php")
     suspend fun getLibrosPorCategoria(@Query("id_categoria") idCategoria: Int): List<Libro>
 
-    @GET("libro_detalle.php")
-    suspend fun getLibroDetalle(@Query("id") idLibro: Int): List<Libro>
-
     @POST("login.php")
     suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    // --- 👇 CAMBIO CRÍTICO AQUÍ 👇 ---
+    // La función ahora espera recibir un solo objeto 'Libro', que es lo que la API realmente envía.
+    @GET("libro_detalle.php")
+    suspend fun getLibroDetalle(@Query("id") idLibro: Int): Libro
 
     companion object {
         private var apiService: ApiService? = null

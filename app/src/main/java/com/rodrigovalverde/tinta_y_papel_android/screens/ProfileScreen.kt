@@ -64,15 +64,35 @@ fun LoggedInProfileView(user: User, onLogout: () -> Unit) {
             TopAppBar(
                 title = { Text("Tu Espacio Personal") },
                 actions = {
-                    IconButton(onClick = onLogout) {
-                        Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Cerrar Sesión")
+                    // --- 👇 CAMBIO CRÍTICO AQUÍ 👇 ---
+                    TextButton(onClick = onLogout) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ExitToApp,
+                                contentDescription = "Cerrar Sesión",
+                                tint = MaterialTheme.colorScheme.onPrimary // Asegura que el color sea correcto
+                            )
+                            Spacer(modifier = Modifier.width(3.dp))
+                            Text(
+                                text = "Salir",
+                                color = MaterialTheme.colorScheme.onPrimary // Asegura que el color sea correcto
+                            )
+                        }
                     }
-                }
+                    // --- FIN DEL CAMBIO ---
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding).fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

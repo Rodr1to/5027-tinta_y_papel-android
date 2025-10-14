@@ -1,5 +1,6 @@
 package com.rodrigovalverde.tinta_y_papel_android.ui.theme
 
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,24 +9,27 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
-// Esquema para el tema oscuro
+// Tus paletas de colores (DarkColorScheme y LightColorScheme) se quedan igual
 private val DarkColorScheme = darkColorScheme(
-    primary = color3,       // Usamos un tono más claro para que resalte en fondo oscuro
-    onPrimary = color2,     // Texto oscuro sobre el botón claro
-    background = color2,    // Fondo oscuro
-    onBackground = White,   // Texto blanco sobre fondo oscuro
+    primary = color1,
+    onPrimary = White,
+    background = color2,
+    onBackground = White,
     surface = color2,
     onSurface = White
 )
 
-// Esquema para el tema claro (el que estás usando principalmente)
 private val LightColorScheme = lightColorScheme(
-    primary = color1,       // El color principal para tus botones
-    onPrimary = White,      // Texto blanco sobre los botones
-    background = LightGray, // Fondo claro
-    onBackground = color2,  // Texto oscuro sobre fondo claro
+    primary = color1,
+    onPrimary = White,
+    background = LightGray,
+    onBackground = color2,
     surface = LightGray,
     onSurface = color2
 )
@@ -44,6 +48,18 @@ fun Tinta_y_papel_androidTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+    // --- 👇 CAMBIO CRÍTICO AQUÍ 👇 ---
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.background.toArgb() // Opcional: Iguala el color de fondo
+            // Le dice al sistema que use íconos oscuros en temas claros
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        }
+    }
+    // --- FIN DEL CAMBIO ---
 
     MaterialTheme(
         colorScheme = colorScheme,

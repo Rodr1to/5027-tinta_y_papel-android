@@ -58,7 +58,7 @@ fun NewsCard() {
                 contentDescription = "Noticia principal",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
                 contentScale = ContentScale.Fit
             )
             Column(modifier = Modifier.padding(16.dp)) {

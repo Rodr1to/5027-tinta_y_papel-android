@@ -18,7 +18,7 @@ import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LoginViewModel
 import kotlinx.coroutines.delay
 
-// CAMBIO AQUÍ: Se añade el parámetro 'loginViewModel' a la función.
+// CAMBIO: Se añade el parámetro 'loginViewModel' a la función.
 @Composable
 fun SplashScreen(navController: NavController, loginViewModel: LoginViewModel) {
     var startAnimation by remember { mutableStateOf(false) }
@@ -32,7 +32,7 @@ fun SplashScreen(navController: NavController, loginViewModel: LoginViewModel) {
         delay(3000)
         navController.popBackStack()
 
-        // Esta lógica ya usa el viewModel, por eso es necesario recibirlo.
+        // Esta lógica ahora funcionará porque recibe el viewModel.
         if (loginViewModel.loggedInUser.value != null) {
             navController.navigate(AppScreens.HomeScreen.route)
         } else {
@@ -48,7 +48,7 @@ fun SplashScreen(navController: NavController, loginViewModel: LoginViewModel) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo de la App",
-                modifier = Modifier.size(150.dp).alpha(alphaAnim.value)
+                modifier = Modifier.size(400.dp).alpha(alphaAnim.value)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
