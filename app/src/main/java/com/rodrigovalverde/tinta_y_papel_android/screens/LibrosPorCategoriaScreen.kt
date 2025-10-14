@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screen
+package com.rodrigovalverde.tinta_y_papel_android.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,7 +36,6 @@ fun LibrosPorCategoriaScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Libros") },
-                // CAMBIO: Se añade el ícono de navegación para volver atrás
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -45,7 +44,6 @@ fun LibrosPorCategoriaScreen(
                         )
                     }
                 },
-                // CAMBIO: Se añaden los colores a la barra superior
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -78,29 +76,40 @@ fun LibroRowCard(libro: Libro, navController: NavController) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(modifier = Modifier.height(150.dp)) {
-            AsyncImage(
-                model = "https://rovalverde.alwaysdata.net/" + libro.url_portada,
-                contentDescription = libro.titulo,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp)
-            )
+            if (libro.url_portada != null) {
+                AsyncImage(
+                    model = "https://rovalverde.alwaysdata.net/" + libro.url_portada,
+                    contentDescription = libro.titulo,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxHeight().width(100.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
+                Column {
+                    Text(
+                        text = libro.titulo,
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = libro.autor,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                // CAMBIO: Se convierte el String a Double antes de formatear
+                val precioDouble = libro.precio.toDoubleOrNull() ?: 0.0
                 Text(
-                    libro.titulo,
+                    text = "S/ ${"%.2f".format(precioDouble)}",
                     style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    libro.autor,
-                    style = MaterialTheme.typography.bodyMedium
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

@@ -18,7 +18,7 @@ interface ApiService {
     suspend fun getLibrosPorCategoria(@Query("id_categoria") idCategoria: Int): List<Libro>
 
     @GET("libro_detalle.php")
-    suspend fun getLibroDetalle(@Query("id") idLibro: Int): Libro
+    suspend fun getLibroDetalle(@Query("id") idLibro: Int): List<Libro>
 
     @POST("login.php")
     suspend fun login(@Body request: LoginRequest): LoginResponse

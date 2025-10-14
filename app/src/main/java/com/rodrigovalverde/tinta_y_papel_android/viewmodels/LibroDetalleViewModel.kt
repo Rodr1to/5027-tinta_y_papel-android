@@ -16,7 +16,13 @@ class LibroDetalleViewModel : ViewModel() {
     fun getLibroDetalle(idLibro: Int) {
         viewModelScope.launch {
             try {
-                libro = ApiService.getInstance().getLibroDetalle(idLibro)
+                // La API ahora devuelve una lista de libros.
+                val listaDeUnLibro = ApiService.getInstance().getLibroDetalle(idLibro)
+
+                // --- 👇 CAMBIO CRÍTICO AQUÍ 👇 ---
+                // Extraemos el primer elemento de la lista de forma segura.
+                libro = listaDeUnLibro.firstOrNull()
+
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

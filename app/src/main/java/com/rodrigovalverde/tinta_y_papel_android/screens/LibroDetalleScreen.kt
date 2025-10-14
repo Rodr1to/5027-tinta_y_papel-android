@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screen
+package com.rodrigovalverde.tinta_y_papel_android.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -34,7 +34,7 @@ fun LibroDetalleScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalles del libro") },
+                title = { Text(viewModel.libro?.titulo ?: "Cargando...") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver atrás")
@@ -52,7 +52,6 @@ fun LibroDetalleScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                // Contenedor de la Imagen
                 AsyncImage(
                     model = "https://rovalverde.alwaysdata.net/" + libro.url_portada,
                     contentDescription = libro.titulo,
@@ -63,7 +62,6 @@ fun LibroDetalleScreen(
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                // Título y Autor
                 Text(libro.titulo, style = MaterialTheme.typography.headlineMedium)
                 Text(
                     text = "por ${libro.autor}",
@@ -71,20 +69,21 @@ fun LibroDetalleScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                // Precio
+
+                // CAMBIO: Se convierte el String a Double de forma segura antes de formatear
+                val precioDouble = libro.precio.toDoubleOrNull() ?: 0.0
                 Text(
-                    text = "S/ ${"%.2f".format(libro.precio)}",
+                    text = "S/ ${"%.2f".format(precioDouble)}",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
-                // Sinopsis
                 Text("Sinopsis", style = MaterialTheme.typography.titleLarge)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(libro.sinopsis, style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(24.dp))
-                // Detalles Adicionales
                 Divider()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Detalles del producto", style = MaterialTheme.typography.titleLarge)
