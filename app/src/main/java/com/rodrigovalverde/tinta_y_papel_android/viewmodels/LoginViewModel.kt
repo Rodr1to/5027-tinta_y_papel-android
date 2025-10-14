@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.viewmodels
+package com.rodrigovalverde.tinta_y_papel_android.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.getValue

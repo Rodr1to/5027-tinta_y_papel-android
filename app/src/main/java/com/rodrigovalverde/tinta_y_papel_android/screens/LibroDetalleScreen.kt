@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screens
+package com.rodrigovalverde.tinta_y_papel_android.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LibroDetalleViewModel
+import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibroDetalleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

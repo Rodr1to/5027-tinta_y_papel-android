@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screens
+package com.rodrigovalverde.tinta_y_papel_android.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,7 +13,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AuthNav
-import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LoginViewModel
+import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

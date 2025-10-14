@@ -9,7 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LibrosViewModel
+import com.rodrigovalverde.tinta_y_papel_android.screen.LibroCard
+import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibrosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

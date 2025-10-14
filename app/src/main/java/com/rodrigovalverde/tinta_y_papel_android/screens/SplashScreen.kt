@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screens
+package com.rodrigovalverde.tinta_y_papel_android.screen
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

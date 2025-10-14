@@ -1,4 +1,4 @@
-package com.rodrigovalverde.tinta_y_papel_android.screens
+package com.rodrigovalverde.tinta_y_papel_android.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
-import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LibrosViewModel
+import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibrosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

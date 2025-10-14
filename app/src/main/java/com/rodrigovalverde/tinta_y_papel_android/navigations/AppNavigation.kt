@@ -9,8 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.rodrigovalverde.tinta_y_papel_android.navigation.MainScaffold
-import com.rodrigovalverde.tinta_y_papel_android.screens.*
-import com.rodrigovalverde.tinta_y_papel_android.viewmodels.LoginViewModel
+import com.rodrigovalverde.tinta_y_papel_android.screen.*
+import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LoginViewModel
 
 @Composable
 fun AppNavigation() {
