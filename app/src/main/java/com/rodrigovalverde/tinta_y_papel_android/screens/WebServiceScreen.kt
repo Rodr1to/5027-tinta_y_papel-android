@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.rodrigovalverde.tinta_y_papel_android.screen.LibroCard
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibrosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,7 +25,6 @@ fun WebServiceScreen(navController: NavController, librosViewModel: LibrosViewMo
     ) { padding ->
         LazyColumn(modifier = Modifier.padding(padding)) {
             items(items = librosViewModel.librosList) { libro ->
-                // Ahora llama a la función centralizada desde CommonComponents.kt
                 LibroCard(libro = libro)
             }
         }

@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.rodrigovalverde.tinta_y_papel_android.screen.CatalogScreen
 import com.rodrigovalverde.tinta_y_papel_android.screen.CategoriasScreen
 import com.rodrigovalverde.tinta_y_papel_android.screen.HomeScreen
 import com.rodrigovalverde.tinta_y_papel_android.screen.LoginScreen

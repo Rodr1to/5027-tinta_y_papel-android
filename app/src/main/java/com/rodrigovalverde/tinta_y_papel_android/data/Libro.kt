@@ -7,9 +7,9 @@ data class Libro(
     val autor: String,
     val editorial: String,
     val id_categoria: Int,
-    val precio: String,
+    val precio: String, // CAMBIO CRÍTICO: Se cambia de Double a String
     val stock: Int,
     val sinopsis: String,
-    val url_portada: String, // Este es el nombre correcto del campo.
+    val url_portada: String?,
     val fecha_publicacion: String
 )
