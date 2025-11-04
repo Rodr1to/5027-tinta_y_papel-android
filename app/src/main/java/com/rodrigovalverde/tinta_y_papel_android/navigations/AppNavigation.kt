@@ -52,7 +52,7 @@ fun AppNavigation() {
                 ProfileScreen(navController = navController, viewModel = loginViewModel)
             }
             composable(route = AppScreens.SavedScreen.route) {
-                SavedScreen()
+                SavedScreen(navController = navController)
             }
             composable(
                 route = AppScreens.LibrosPorCategoriaScreen.route,

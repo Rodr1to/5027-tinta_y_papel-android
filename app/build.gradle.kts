@@ -1,7 +1,12 @@
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.kapt
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
 }
 
 
@@ -38,8 +43,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
 
     buildFeatures {
@@ -77,4 +84,17 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    implementation(libs.coil3.coil.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KaptGenerateStubs> {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
 }
