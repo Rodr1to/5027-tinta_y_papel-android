@@ -1,5 +1,6 @@
 package com.rodrigovalverde.tinta_y_papel_android.screens
 
+import androidx.compose.foundation.Image // <-- 1. IMPORTAR Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage // Usamos Coil 3
+import coil.compose.rememberAsyncImagePainter // <-- 2. IMPORTAR EL PAINTER DE COIL 2
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibroDetalleViewModel
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.SavedViewModel
@@ -34,8 +35,9 @@ fun LibroDetalleScreen(
     detalleViewModel: LibroDetalleViewModel = viewModel(),
     savedViewModel: SavedViewModel = viewModel()
 ) {
-    // --- LEEMOS LOS NUEVOS ESTADOS DEL VIEWMODEL ---
-    val libro = detalleViewModel.libro
+    // --- 3. CREAR COPIA LOCAL INMUTABLE ---
+    // Esto arregla los errores de "nullable receiver"
+    val currentLibro = detalleViewModel.libro
     val isLoading = detalleViewModel.isLoading
     val errorMessage = detalleViewModel.errorMessage
 
@@ -52,15 +54,14 @@ fun LibroDetalleScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(libro?.titulo ?: "Cargando...") },
+                title = { Text(currentLibro?.titulo ?: "Cargando...") }, // <-- Usar copia local
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver atrás")
                     }
                 },
                 actions = {
-                    // Botón de Guardado solo si el libro existe y no hay error
-                    libro?.let { libroDetalle ->
+                    currentLibro?.let { libroDetalle -> // <-- Usar copia local
                         IconButton(onClick = {
                             scope.launch {
                                 if (isSaved) {
@@ -82,7 +83,6 @@ fun LibroDetalleScreen(
             )
         }
     ) { padding ->
-        // --- MANEJO DE ESTADOS DE UI ---
         Box(
             modifier = Modifier
                 .padding(padding)
@@ -91,11 +91,9 @@ fun LibroDetalleScreen(
         ) {
             when {
                 isLoading -> {
-                    // 1. Muestra "Cargando..."
                     CircularProgressIndicator()
                 }
                 errorMessage != null -> {
-                    // 2. Muestra el error de la API
                     Text(
                         "Error: $errorMessage",
                         color = MaterialTheme.colorScheme.error,
@@ -103,37 +101,39 @@ fun LibroDetalleScreen(
                         modifier = Modifier.padding(32.dp)
                     )
                 }
-                libro == null && !isLoading -> {
-                    // 3. Estado por defecto si no carga y no hay error
+                // --- 4. USAR COPIA LOCAL EN LA VALIDACIÓN ---
+                currentLibro == null -> {
                     Text("Detalles del libro no disponibles.", textAlign = TextAlign.Center)
                 }
                 else -> {
-                    // 4. Muestra el contenido del libro (TU CÓDIGO ANTERIOR)
+                    // --- 5. USAR COPIA LOCAL (AHORA NO NULA) EN TODO EL BLOQUE ---
                     Column(
                         modifier = Modifier
-                            .fillMaxSize() // Asegura que la columna llene el espacio
+                            .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                             .padding(horizontal = 24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally // Centra la imagen
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Portada del Libro
-                        AsyncImage(
-                            model = "https://rovalverde.alwaysdata.net/" + (libro?.url_portada ?: ""),
-                            contentDescription = "Portada de ${libro?.titulo}",
+                        // --- 6. CAMBIAR A SINTAXIS COIL 2 ---
+                        Image( // <-- Usar Image
+                            painter = rememberAsyncImagePainter( // <-- Usar painter
+                                model = "https://rovalverde.alwaysdata.net/" + (currentLibro.url_portada ?: "")
+                            ),
+                            contentDescription = "Portada de ${currentLibro.titulo}", // <-- Ahora es seguro
                             modifier = Modifier
-                                .fillMaxWidth(0.8f) // Reduce el ancho de la imagen
+                                .fillMaxWidth(0.8f)
                                 .height(350.dp)
                                 .clip(RoundedCornerShape(16.dp)),
                             contentScale = ContentScale.Crop
                         )
+                        // --- FIN DEL CAMBIO A COIL 2 ---
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Título
                         Text(
-                            text = libro?.titulo ?: "Sin Título",
+                            text = currentLibro.titulo, // <-- Seguro
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
@@ -141,9 +141,8 @@ fun LibroDetalleScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Autor
                         Text(
-                            text = libro?.autor ?: "Sin Autor",
+                            text = currentLibro.autor, // <-- Seguro
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
@@ -152,13 +151,12 @@ fun LibroDetalleScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Detalles en Fila (Precio y Stock)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            val precioValue = libro?.precio ?: "N/D"
-                            val stockValue = libro?.stock?.toString() ?: "N/D"
+                            val precioValue = currentLibro.precio ?: "N/D"
+                            val stockValue = currentLibro.stock?.toString() ?: "N/D"
 
                             DetailItem(label = "Precio", value = "S/ $precioValue")
                             DetailItem(label = "Stock", value = stockValue)
@@ -166,7 +164,6 @@ fun LibroDetalleScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Sinopsis
                         Text(
                             text = "Sinopsis",
                             style = MaterialTheme.typography.titleMedium,
@@ -174,27 +171,25 @@ fun LibroDetalleScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = libro?.sinopsis ?: "Sin sinopsis disponible.",
+                            text = currentLibro.sinopsis ?: "Sin sinopsis disponible.",
                             style = MaterialTheme.typography.bodyLarge,
                             lineHeight = 24.sp
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Otros Detalles
                         Text(
                             text = "Detalles Adicionales",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        DetailItem(label = "Editorial", value = libro?.editorial ?: "N/D")
-                        DetailItem(label = "ISBN", value = libro?.isbn ?: "N/D")
-                        DetailItem(label = "Publicación", value = libro?.fecha_publicacion ?: "N/D")
+                        DetailItem(label = "Editorial", value = currentLibro.editorial ?: "N/D")
+                        DetailItem(label = "ISBN", value = currentLibro.isbn ?: "N/D")
+                        DetailItem(label = "Publicación", value = currentLibro.fecha_publicacion ?: "N/D")
 
                         Spacer(modifier = Modifier.height(32.dp))
                     }
-                    // --- FIN Contenido del libro ---
                 }
             }
         }

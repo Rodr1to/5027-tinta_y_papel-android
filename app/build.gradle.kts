@@ -88,7 +88,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
-    implementation(libs.coil3.coil.compose)
+    // implementation(libs.coil3.coil.compose)
     implementation(libs.androidx.compose.material.icons.extended)
 
 }

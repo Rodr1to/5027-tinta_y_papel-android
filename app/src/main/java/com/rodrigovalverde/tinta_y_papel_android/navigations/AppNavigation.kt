@@ -22,12 +22,10 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val loginViewModel: LoginViewModel = viewModel()
 
-    // El lambda de MainScaffold ahora nos da 'innerPadding' del tipo correcto
     MainScaffold(navController = navController) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = AppScreens.SplashScreen.route,
-            // CAMBIO: Aplicamos el padding al NavHost usando un Modifier
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = AppScreens.SplashScreen.route) {
