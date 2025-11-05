@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.rodrigovalverde.tinta_y_papel_android.data.ApiService
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import kotlinx.coroutines.launch
-import java.io.IOException
+import java.io.IOException // Necesario para errores de red
 
 class LibroDetalleViewModel : ViewModel() {
 
@@ -23,7 +23,7 @@ class LibroDetalleViewModel : ViewModel() {
 
     // Estado para mensajes de error
     var errorMessage: String? by mutableStateOf(null)
-        private set
+        private set; // (;) para que coincida con tu repo
 
     /**
      * Llama a la API para obtener los detalles de un libro por su ID.
@@ -39,7 +39,7 @@ class LibroDetalleViewModel : ViewModel() {
             isLoading = true
             errorMessage = null
 
-            // --- AÑADIR BLOQUE TRY-CATCH PARA MANEJO ROBUSTO DE ERRORES ---
+            // --- BLOQUE TRY-CATCH PARA MANEJO ROBUSTO DE ERRORES ---
             try {
                 // Llamada síncrona a la API
                 val apiService = ApiService.getInstance()
@@ -48,7 +48,7 @@ class LibroDetalleViewModel : ViewModel() {
 
             } catch (e: IOException) {
                 // Error de red (No hay internet, host inaccesible)
-                errorMessage = "Error de red: ${e.message}"
+                errorMessage = "Error de red. Verifique su conexión o URL."
                 Log.e("LibroDetalle", "Error de red: $e")
                 libro = null
             } catch (e: Exception) {

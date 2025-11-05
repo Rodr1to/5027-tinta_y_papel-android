@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.rodrigovalverde.tinta_y_papel_android.data.Libro
+import com.rodrigovalverde.tinta_y_papel_android.data.Libro // <-- Reutilizamos tu data class de API
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.SavedViewModel
 
@@ -32,7 +32,7 @@ fun SavedScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mis Libros Favoritos") },
+                title = { Text("Mis Libros Guardados") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate(AppScreens.HomeScreen.route) }) {
                         Icon(
@@ -80,16 +80,21 @@ fun SavedScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(librosGuardados) { libroGuardado ->
+                    // --- CORRECCIÓN AQUÍ ---
+                    // Convertimos LibroGuardado a Libro para re-usar tu Composable
                     val libro = Libro(
                         id = libroGuardado.id,
                         titulo = libroGuardado.titulo,
                         autor = libroGuardado.autor,
                         url_portada = libroGuardado.url_portada,
-                        precio = libroGuardado.precio,
+                        precio = libroGuardado.precio, // <-- ¡USAMOS EL PRECIO REAL GUARDADO!
+                        // Rellenamos campos no guardados con valores seguros
                         isbn = "", editorial = "", id_categoria = 0,
                         stock = 0, sinopsis = "", fecha_publicacion = ""
                     )
-                    // Reutilizamos el Composable de CatalogScreen
+                    // --- FIN DE LA CORRECCIÓN ---
+
+                    // Reutilizamos el Composable que ya tienes en CatalogScreen o CommonComponents
                     LibroRowCard(libro = libro, navController = navController)
                 }
             }

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
+import coil3.compose.AsyncImage // Usamos Coil 3
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibroDetalleViewModel
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.SavedViewModel
@@ -30,17 +30,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibroDetalleScreen(
     navController: NavController,
-    idLibro: Int, // <-- El ID que viene de la navegación
+    idLibro: Int,
     detalleViewModel: LibroDetalleViewModel = viewModel(),
     savedViewModel: SavedViewModel = viewModel()
 ) {
+    // --- LEEMOS LOS NUEVOS ESTADOS DEL VIEWMODEL ---
     val libro = detalleViewModel.libro
+    val isLoading = detalleViewModel.isLoading
+    val errorMessage = detalleViewModel.errorMessage
+
     val scope = rememberCoroutineScope()
     var isSaved by remember { mutableStateOf(false) }
 
-    // --- CORRECCIÓN CLAVE: Solo llamar a la API si el ID es válido ---
     LaunchedEffect(idLibro) {
-        if (idLibro > 0) { // Asumimos que un ID válido es mayor a 0
+        if (idLibro > 0) {
             detalleViewModel.getLibroDetalle(idLibro)
             isSaved = savedViewModel.isLibroGuardado(idLibro)
         }
@@ -56,6 +59,7 @@ fun LibroDetalleScreen(
                     }
                 },
                 actions = {
+                    // Botón de Guardado solo si el libro existe y no hay error
                     libro?.let { libroDetalle ->
                         IconButton(onClick = {
                             scope.launch {
@@ -64,7 +68,6 @@ fun LibroDetalleScreen(
                                 } else {
                                     savedViewModel.guardarLibro(libroDetalle)
                                 }
-                                // Actualizar el estado después de la operación de base de datos
                                 isSaved = savedViewModel.isLibroGuardado(idLibro)
                             }
                         }) {
@@ -79,104 +82,126 @@ fun LibroDetalleScreen(
             )
         }
     ) { padding ->
-        if (libro == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .padding(padding) // <-- APLICACIÓN DEL PADDING DEL SCAFFOLD
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Portada del Libro
-                AsyncImage(
-                    model = "https://rovalverde.alwaysdata.net/" + libro.url_portada,
-                    contentDescription = "Portada de ${libro.titulo}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(350.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Título
-                Text(
-                    text = libro.titulo,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Autor
-                Text(
-                    text = libro.autor,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Detalles en Fila (Precio y Stock)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    // Manejamos los campos que pueden ser null o String
-                    val precioValue = libro.precio ?: "N/D"
-                    val stockValue = libro.stock?.toString() ?: "N/D" // Manejamos Int?
-
-                    DetailItem(label = "Precio", value = "S/ $precioValue")
-                    DetailItem(label = "Stock", value = stockValue)
+        // --- MANEJO DE ESTADOS DE UI ---
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            when {
+                isLoading -> {
+                    // 1. Muestra "Cargando..."
+                    CircularProgressIndicator()
                 }
+                errorMessage != null -> {
+                    // 2. Muestra el error de la API
+                    Text(
+                        "Error: $errorMessage",
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(32.dp)
+                    )
+                }
+                libro == null && !isLoading -> {
+                    // 3. Estado por defecto si no carga y no hay error
+                    Text("Detalles del libro no disponibles.", textAlign = TextAlign.Center)
+                }
+                else -> {
+                    // 4. Muestra el contenido del libro (TU CÓDIGO ANTERIOR)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize() // Asegura que la columna llene el espacio
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally // Centra la imagen
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                Spacer(modifier = Modifier.height(24.dp))
+                        // Portada del Libro
+                        AsyncImage(
+                            model = "https://rovalverde.alwaysdata.net/" + (libro?.url_portada ?: ""),
+                            contentDescription = "Portada de ${libro?.titulo}",
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f) // Reduce el ancho de la imagen
+                                .height(350.dp)
+                                .clip(RoundedCornerShape(16.dp)),
+                            contentScale = ContentScale.Crop
+                        )
 
-                // Sinopsis
-                Text(
-                    text = "Sinopsis",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                // Manejamos sinopsis nula
-                Text(
-                    text = libro.sinopsis ?: "Sin sinopsis disponible.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    lineHeight = 24.sp
-                )
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                Spacer(modifier = Modifier.height(24.dp))
+                        // Título
+                        Text(
+                            text = libro?.titulo ?: "Sin Título",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                // Otros Detalles
-                Text(
-                    text = "Detalles Adicionales",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DetailItem(label = "Editorial", value = libro.editorial ?: "N/D")
-                DetailItem(label = "ISBN", value = libro.isbn ?: "N/D")
-                DetailItem(label = "Publicación", value = libro.fecha_publicacion ?: "N/D")
+                        // Autor
+                        Text(
+                            text = libro?.autor ?: "Sin Autor",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Detalles en Fila (Precio y Stock)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ) {
+                            val precioValue = libro?.precio ?: "N/D"
+                            val stockValue = libro?.stock?.toString() ?: "N/D"
+
+                            DetailItem(label = "Precio", value = "S/ $precioValue")
+                            DetailItem(label = "Stock", value = stockValue)
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Sinopsis
+                        Text(
+                            text = "Sinopsis",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = libro?.sinopsis ?: "Sin sinopsis disponible.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            lineHeight = 24.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Otros Detalles
+                        Text(
+                            text = "Detalles Adicionales",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        DetailItem(label = "Editorial", value = libro?.editorial ?: "N/D")
+                        DetailItem(label = "ISBN", value = libro?.isbn ?: "N/D")
+                        DetailItem(label = "Publicación", value = libro?.fecha_publicacion ?: "N/D")
+
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                    // --- FIN Contenido del libro ---
+                }
             }
         }
-    } // <-- FIN DEL SCAFFOLD
+    }
 }
 
+// Este Composable se queda igual
 @Composable
 fun DetailItem(label: String, value: String) {
     Column(

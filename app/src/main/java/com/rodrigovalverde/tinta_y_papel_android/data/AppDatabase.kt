@@ -5,7 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [LibroGuardado::class], version = 1)
+// --- CAMBIO AQUÍ: VERSIÓN 2 ---
+@Database(entities = [LibroGuardado::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun libroGuardadoDao(): LibroGuardadoDao
@@ -21,6 +22,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "tinta_y_papel_db"
                 )
+                    // --- ASEGÚRATE QUE ESTA LÍNEA EXISTA ---
+                    // Borra la base de datos si la versión cambia (de 1 a 2)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
