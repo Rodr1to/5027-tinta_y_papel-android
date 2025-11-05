@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
 import com.rodrigovalverde.tinta_y_papel_android.data.Libro
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LibroDetalleViewModel
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.SavedViewModel
@@ -31,18 +30,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibroDetalleScreen(
     navController: NavController,
-    idLibro: Int,
+    idLibro: Int, // <-- El ID que viene de la navegación
     detalleViewModel: LibroDetalleViewModel = viewModel(),
     savedViewModel: SavedViewModel = viewModel()
 ) {
     val libro = detalleViewModel.libro
     val scope = rememberCoroutineScope()
-
     var isSaved by remember { mutableStateOf(false) }
 
+    // --- CORRECCIÓN CLAVE: Solo llamar a la API si el ID es válido ---
     LaunchedEffect(idLibro) {
-        detalleViewModel.getLibroDetalle(idLibro)
-        isSaved = savedViewModel.isLibroGuardado(idLibro)
+        if (idLibro > 0) { // Asumimos que un ID válido es mayor a 0
+            detalleViewModel.getLibroDetalle(idLibro)
+            isSaved = savedViewModel.isLibroGuardado(idLibro)
+        }
     }
 
     Scaffold(
@@ -63,7 +64,8 @@ fun LibroDetalleScreen(
                                 } else {
                                     savedViewModel.guardarLibro(libroDetalle)
                                 }
-                                isSaved = !isSaved
+                                // Actualizar el estado después de la operación de base de datos
+                                isSaved = savedViewModel.isLibroGuardado(idLibro)
                             }
                         }) {
                             Icon(
@@ -76,7 +78,7 @@ fun LibroDetalleScreen(
                 }
             )
         }
-    ) { padding -> // <-- INICIO DEL CONTENIDO PRINCIPAL (usando el padding)
+    ) { padding ->
         if (libro == null) {
             Box(
                 modifier = Modifier.fillMaxSize(),
