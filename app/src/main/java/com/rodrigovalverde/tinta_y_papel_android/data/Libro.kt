@@ -3,16 +3,15 @@ package com.rodrigovalverde.tinta_y_papel_android.data
 import com.google.gson.annotations.SerializedName
 
 data class Libro(
-    val id: Int,
+    val id: Int, // <-- El ID no debe ser nulo para la navegación
     val titulo: String,
     val autor: String,
 
-    // Hacemos que los campos problemáticos sean opcionales (String?)
-    // Si tu API devuelve un Double para precio, usa Double?
-    val precio: String?, // <-- Cambiar a String? (o Double?)
-    val stock: Int?, // <-- Cambiar a Int?
+    // Hacemos que los campos problemáticos sean opcionales
+    val precio: String?,
+    val stock: Int?,
 
-    // Los demás campos pueden ser opcionales o Strings
+    // Los demás campos
     val isbn: String?,
     val editorial: String?,
     @SerializedName("id_categoria")
@@ -21,7 +20,6 @@ data class Libro(
     @SerializedName("fecha_publicacion")
     val fecha_publicacion: String?,
 
-    // El nombre de la URL en la API es 'portada_url' o similar.
     @SerializedName("url_portada")
     val url_portada: String?
 )

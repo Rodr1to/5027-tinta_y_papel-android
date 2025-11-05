@@ -13,16 +13,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// Usamos AndroidViewModel para tener acceso al Contexto de la aplicación
 class SavedViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = AppDatabase.getInstance(application).libroGuardadoDao()
 
-    // Expone la lista de libros guardados como un StateFlow
     val librosGuardados: StateFlow<List<LibroGuardado>> = dao.getLibrosGuardados()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    // Función para guardar un libro (convierte Libro de API a LibroGuardado)
+    // CORRECCIÓN: Aseguramos que se guarde el precio
     fun guardarLibro(libro: Libro) {
         viewModelScope.launch(Dispatchers.IO) {
             val libroGuardado = LibroGuardado(
@@ -30,13 +28,13 @@ class SavedViewModel(application: Application) : AndroidViewModel(application) {
                 titulo = libro.titulo,
                 autor = libro.autor,
                 url_portada = libro.url_portada,
-                precio = libro.precio
+                precio = libro.precio // <-- Guardando el precio
             )
             dao.insert(libroGuardado)
         }
     }
 
-    // Función para eliminar un libro
+    // CORRECCIÓN: Aseguramos que se use el objeto LibroGuardado correcto para eliminar
     fun eliminarLibro(libro: Libro) {
         viewModelScope.launch(Dispatchers.IO) {
             val libroGuardado = LibroGuardado(
@@ -44,7 +42,7 @@ class SavedViewModel(application: Application) : AndroidViewModel(application) {
                 titulo = libro.titulo,
                 autor = libro.autor,
                 url_portada = libro.url_portada,
-                precio = libro.precio
+                precio = libro.precio // <-- Incluyendo precio para el delete
             )
             dao.delete(libroGuardado)
         }
