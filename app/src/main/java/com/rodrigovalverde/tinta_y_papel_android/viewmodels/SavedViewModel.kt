@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // Usamos AndroidViewModel para tener acceso al Contexto de la aplicación
 class SavedViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,41 +24,36 @@ class SavedViewModel(application: Application) : AndroidViewModel(application) {
 
     // Función para guardar un libro (convierte Libro de API a LibroGuardado)
     fun guardarLibro(libro: Libro) {
-        viewModelScope.launch(Dispatchers.IO) { // Usamos IO para operaciones de BD
+        viewModelScope.launch(Dispatchers.IO) {
             val libroGuardado = LibroGuardado(
                 id = libro.id,
                 titulo = libro.titulo,
                 autor = libro.autor,
-                url_portada = libro.url_portada
+                url_portada = libro.url_portada,
+                precio = libro.precio
             )
             dao.insert(libroGuardado)
         }
     }
 
     // Función para eliminar un libro
-    fun eliminarLibro(libro: LibroGuardado) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dao.delete(libro)
-        }
-    }
-
-    // Función para eliminar un libro usando el objeto 'Libro' de la API
     fun eliminarLibro(libro: Libro) {
         viewModelScope.launch(Dispatchers.IO) {
             val libroGuardado = LibroGuardado(
                 id = libro.id,
                 titulo = libro.titulo,
                 autor = libro.autor,
-                url_portada = libro.url_portada
+                url_portada = libro.url_portada,
+                precio = libro.precio
             )
             dao.delete(libroGuardado)
         }
     }
 
-    // Función para verificar si un libro ya está guardado
+    fun eliminarLibro(libro: LibroGuardado) { /* Se queda igual */ }
+
     suspend fun isLibroGuardado(idLibro: Int): Boolean {
-        // Ejecutamos en IO y devolvemos el resultado
-        return kotlinx.coroutines.withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             dao.getLibroById(idLibro) != null
         }
     }

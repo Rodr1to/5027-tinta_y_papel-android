@@ -33,18 +33,15 @@ fun LibroDetalleScreen(
     navController: NavController,
     idLibro: Int,
     detalleViewModel: LibroDetalleViewModel = viewModel(),
-    savedViewModel: SavedViewModel = viewModel() // <-- ViewModel de Room
+    savedViewModel: SavedViewModel = viewModel()
 ) {
     val libro = detalleViewModel.libro
     val scope = rememberCoroutineScope()
 
-    // Estado para saber si el libro está guardado
     var isSaved by remember { mutableStateOf(false) }
 
-    // Cargar detalles del libro y verificar si está guardado
     LaunchedEffect(idLibro) {
         detalleViewModel.getLibroDetalle(idLibro)
-        // Preguntar al ViewModel si el libro está guardado
         isSaved = savedViewModel.isLibroGuardado(idLibro)
     }
 
@@ -57,20 +54,16 @@ fun LibroDetalleScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver atrás")
                     }
                 },
-                // --- ACCIÓN DE GUARDAR ---
                 actions = {
-                    // Solo mostramos el botón si el libro se ha cargado
                     libro?.let { libroDetalle ->
                         IconButton(onClick = {
                             scope.launch {
                                 if (isSaved) {
-                                    // Si ya está guardado, lo eliminamos
                                     savedViewModel.eliminarLibro(libroDetalle)
                                 } else {
-                                    // Si no está guardado, lo guardamos
                                     savedViewModel.guardarLibro(libroDetalle)
                                 }
-                                isSaved = !isSaved // Invertimos el estado visualmente
+                                isSaved = !isSaved
                             }
                         }) {
                             Icon(
@@ -83,9 +76,8 @@ fun LibroDetalleScreen(
                 }
             )
         }
-    ) { padding ->
+    ) { padding -> // <-- INICIO DEL CONTENIDO PRINCIPAL (usando el padding)
         if (libro == null) {
-            // Muestra un indicador de carga mientras el libro es null
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -93,10 +85,9 @@ fun LibroDetalleScreen(
                 CircularProgressIndicator()
             }
         } else {
-            // Cuando el libro se carga, se muestra el contenido
             Column(
                 modifier = Modifier
-                    .padding(padding)
+                    .padding(padding) // <-- APLICACIÓN DEL PADDING DEL SCAFFOLD
                     .padding(horizontal = 24.dp)
                     .verticalScroll(rememberScrollState())
             ) {
@@ -141,9 +132,12 @@ fun LibroDetalleScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    val precioDouble = libro.precio
-                    DetailItem(label = "Precio", value = "S/ ${"%.2f".format(precioDouble)}")
-                    DetailItem(label = "Stock", value = libro.stock.toString())
+                    // Manejamos los campos que pueden ser null o String
+                    val precioValue = libro.precio ?: "N/D"
+                    val stockValue = libro.stock?.toString() ?: "N/D" // Manejamos Int?
+
+                    DetailItem(label = "Precio", value = "S/ $precioValue")
+                    DetailItem(label = "Stock", value = stockValue)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -155,8 +149,9 @@ fun LibroDetalleScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+                // Manejamos sinopsis nula
                 Text(
-                    text = libro.sinopsis,
+                    text = libro.sinopsis ?: "Sin sinopsis disponible.",
                     style = MaterialTheme.typography.bodyLarge,
                     lineHeight = 24.sp
                 )
@@ -170,14 +165,14 @@ fun LibroDetalleScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                DetailItem(label = "Editorial", value = libro.editorial)
-                DetailItem(label = "ISBN", value = libro.isbn)
-                DetailItem(label = "Publicación", value = libro.fecha_publicacion)
+                DetailItem(label = "Editorial", value = libro.editorial ?: "N/D")
+                DetailItem(label = "ISBN", value = libro.isbn ?: "N/D")
+                DetailItem(label = "Publicación", value = libro.fecha_publicacion ?: "N/D")
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
-    }
+    } // <-- FIN DEL SCAFFOLD
 }
 
 @Composable

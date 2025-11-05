@@ -32,7 +32,7 @@ fun SavedScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mis Libros Guardados") },
+                title = { Text("Mis Libros Favoritos") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate(AppScreens.HomeScreen.route) }) {
                         Icon(
@@ -80,17 +80,16 @@ fun SavedScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(librosGuardados) { libroGuardado ->
-                    // Convertimos LibroGuardado a Libro para re-usar tu Composable
                     val libro = Libro(
                         id = libroGuardado.id,
                         titulo = libroGuardado.titulo,
                         autor = libroGuardado.autor,
                         url_portada = libroGuardado.url_portada,
-                        // Rellenamos campos faltantes (no son necesarios para el card)
+                        precio = libroGuardado.precio,
                         isbn = "", editorial = "", id_categoria = 0,
-                        precio = "0.0", stock = 0, sinopsis = "", fecha_publicacion = ""
+                        stock = 0, sinopsis = "", fecha_publicacion = ""
                     )
-                    // Reutilizamos el Composable que ya tienes en CatalogScreen
+                    // Reutilizamos el Composable de CatalogScreen
                     LibroRowCard(libro = libro, navController = navController)
                 }
             }

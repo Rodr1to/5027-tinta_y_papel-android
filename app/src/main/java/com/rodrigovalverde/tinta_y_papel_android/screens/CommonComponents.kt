@@ -84,7 +84,7 @@ fun LibroRowCard(libro: Libro, navController: NavController) {
                     )
                 }
                 // CAMBIO: Se convierte el String a Double de forma segura antes de formatear
-                val precioDouble = libro.precio.toDoubleOrNull() ?: 0.0
+                val precioDouble = libro.precio?.toDoubleOrNull() ?: 0.0
                 Text(
                     text = "S/ ${"%.2f".format(precioDouble)}",
                     style = MaterialTheme.typography.bodyLarge,

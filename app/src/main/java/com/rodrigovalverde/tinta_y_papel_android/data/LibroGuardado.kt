@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "libros_guardados")
 data class LibroGuardado(
-    @PrimaryKey // Usaremos el ID del libro de la API, que es único
+    @PrimaryKey
     val id: Int,
     val titulo: String,
     val autor: String,
-    val url_portada: String? // Opcional por si alguna URL falla
+    val url_portada: String?,
+    val precio: String?
 )
