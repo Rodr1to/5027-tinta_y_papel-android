@@ -25,6 +25,8 @@ sealed class AppScreens(val route: String) {
     // Ruta para la pantalla de "Guardados"
     object SavedScreen: AppScreens("saved_screen")
 
+    object LibreriasScreen : AppScreens("librerias_screen")
+
     object LibrosPorCategoriaScreen : AppScreens("libros_por_categoria_screen/{idCategoria}") {
         fun createRoute(idCategoria: Int) = "libros_por_categoria_screen/$idCategoria"
     }

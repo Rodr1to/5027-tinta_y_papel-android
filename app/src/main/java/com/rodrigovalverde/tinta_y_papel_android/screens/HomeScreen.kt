@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.rodrigovalverde.tinta_y_papel_android.R
+import com.rodrigovalverde.tinta_y_papel_android.navigation.AppScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +43,13 @@ fun HomeScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             NewsCard()
+
+            Button(
+                onClick = { navController.navigate(AppScreens.LibreriasScreen.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ver Sucursales y Mapa")
+            }
         }
     }
 }
@@ -54,12 +62,13 @@ fun NewsCard() {
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.generated),
+                painter = painterResource(id = R.drawable.generated), // Tu imagen
                 contentDescription = "Noticia principal",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-                contentScale = ContentScale.Fit
+                    .height(200.dp) // <--- AGREGA ESTO: Altura fija para que no sea gigante
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                contentScale = ContentScale.Crop // <--- CAMBIA ESTO: 'Crop' para que llene el espacio sin deformarse
             )
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(

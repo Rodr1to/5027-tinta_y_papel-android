@@ -6,6 +6,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import com.rodrigovalverde.tinta_y_papel_android.data.LoginRequest
+import com.rodrigovalverde.tinta_y_papel_android.data.LoginResponse
 
 interface ApiService {
     // ... (las otras funciones se quedan igual)

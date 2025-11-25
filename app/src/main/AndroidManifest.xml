@@ -13,6 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tinta_y_papel_android">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -20,9 +25,17 @@
             android:theme="@style/Theme.Tinta_y_papel_android">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".pages.MapaActivity"
+                  android:exported="false"
+                  android:theme="@style/Theme.Tinta_y_papel_android" />
+        <activity android:name=".pages.DetalleLugarActivity"
+                  android:exported="false"
+                  android:theme="@style/Theme.Tinta_y_papel_android" />
     </application>
 
 </manifest>

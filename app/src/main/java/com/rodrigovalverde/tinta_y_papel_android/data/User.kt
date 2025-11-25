@@ -22,9 +22,3 @@ data class LoginResponse(
     val message: String?,
     val user: UserApiResponse?
 )
-
-// Modelo para enviar en la petición de login
-data class LoginRequest(
-    val user: String,
-    val password: String
-)

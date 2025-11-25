@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Tinta y Papel</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_mapa_detalle">MapaDetalleActivity</string>
+    <string name="title_activity_mapa_detalle_activity.kt">MapaDetalleActivity.kt</string>
 </resources>

@@ -1,6 +1,8 @@
 import org.gradle.kotlin.dsl.implementation
 import org.gradle.kotlin.dsl.kapt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,8 +10,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
 }
-
-
 
 android {
 
@@ -24,6 +24,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(FileInputStream(localPropertiesFile))
+        }
+        val apiKey = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        buildConfigField("String", "MAPS_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -51,6 +62,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -90,6 +102,15 @@ dependencies {
 
     // implementation(libs.coil3.coil.compose)
     implementation(libs.androidx.compose.material.icons.extended)
+
+    //implementation("com.google.maps.android:maps-compose:6.12.0")
+    implementation(libs.maps.compose)
+
+    //implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.play.services.location)
+
+    //implementation("com.google.android.libraries.places:places:3.5.0")
+    implementation(libs.places)
 
 }
 

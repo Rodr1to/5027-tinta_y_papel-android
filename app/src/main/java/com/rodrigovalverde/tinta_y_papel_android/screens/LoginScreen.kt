@@ -14,12 +14,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.rodrigovalverde.tinta_y_papel_android.navigation.AuthNav
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LoginViewModel
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.input.VisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel) { // Recibe el ViewModel
     val loginState = viewModel.loginUiState
     val loggedInUser by viewModel.loggedInUser.collectAsState()
+    var passwordVisible by remember { mutableStateOf(false) }
 
     var user by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -61,8 +65,19 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) { // Re
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else
+                        Icons.Filled.VisibilityOff
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = image, contentDescription = "Ver contraseña")
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {

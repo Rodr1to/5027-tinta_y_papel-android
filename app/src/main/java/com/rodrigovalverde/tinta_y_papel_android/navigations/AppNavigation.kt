@@ -16,6 +16,7 @@ import com.rodrigovalverde.tinta_y_papel_android.screen.ProfileScreen
 import com.rodrigovalverde.tinta_y_papel_android.screen.WelcomeScreen
 import com.rodrigovalverde.tinta_y_papel_android.screens.*
 import com.rodrigovalverde.tinta_y_papel_android.viewmodel.LoginViewModel
+import com.rodrigovalverde.tinta_y_papel_android.screens.LibreriasScreen
 
 @Composable
 fun AppNavigation() {
@@ -39,6 +40,9 @@ fun AppNavigation() {
             }
             composable(route = AppScreens.HomeScreen.route) {
                 HomeScreen(navController = navController)
+            }
+            composable(route = AppScreens.LibreriasScreen.route) {
+                LibreriasScreen(navController = navController)
             }
             composable(route = AppScreens.CategoriasScreen.route) {
                 CategoriasScreen(navController = navController)
